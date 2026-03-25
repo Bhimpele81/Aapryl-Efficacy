@@ -437,7 +437,7 @@
 <!-- ─── Sidebar ─────────────────────────────────────────────────────── -->
 <aside id="sidebar">
   <div class="logo">
-    <img src="aapryl-logo.jpg" alt="Aapryl — Empowering Portfolio Solutions" />
+    <img src="aapryl-logo.jpg" alt="Aapryl: Empowering Portfolio Solutions" />
     <small>Efficacy Report · 2025</small>
   </div>
   <nav>
@@ -515,7 +515,7 @@
         <li><strong>Static Clone:</strong> Long-term passive replication portfolio consisting of 100% allocation to various market indices including indices focused on: style, region, fundamental or risk factors, market cap, and economic sensitivity. Weights are set by Xponance's proprietary algorithm using the historical returns of product and indices.</li>
         <li><strong>Dynamic Clone:</strong> Short-term passive replication portfolio consisting of 100% allocation to various market indices. Weights are set by Xponance's proprietary algorithm using the trailing 36 months of product and index returns.</li>
         <li><strong>Manager Skill:</strong> Product performance minus Static Clone Performance, normalized for market environment and peer group.</li>
-        <li><strong>Aapryl Score:</strong> A composite score (1–5, where 1 = most skilled) derived from six skill-based metrics spanning Total Excess Return, Stock Selection Return, and Style Timing Return—each measured for both Consistency and Edge.</li>
+        <li><strong>Aapryl Score:</strong> A composite score (1–5, where 1 = most skilled) derived from six skill-based metrics spanning Total Excess Return, Stock Selection Return, and Style Timing Return, each measured for both Consistency and Edge.</li>
       </ul>
     </section>
 
@@ -527,7 +527,7 @@
       <h3>Development of More Accurate Manager Benchmarks (Clones) Through Portfolio Replication</h3>
       <p>Manager performance varies over time, driven by factors that managers directly control, as well as factors outside of their control. Many manager processes begin with a belief system or investment philosophy that dictates which factors from a broad universe of securities are filtered for consideration. The aggregation of these factors can broadly be described as representative of the manager's investment style. From there, managers typically perform additional fundamental or technical analysis in order to determine the final sub-set of securities that will comprise their portfolio. However, this initial filtering of factors leads to either explicit or implicit factor exposures that can have a meaningful impact on manager performance that is separate from their selection skill.</p>
 
-      <p>Because the performance of factors is subject to market cycles, manager peer group rankings are also subject to such cycles. This cyclicality—combined with investors' conflation of the performance impact of a manager's factor exposures (i.e., investment style) with their selection alpha—often leads to disappointing results: manager rankings that are not persistent, and high-ranking first-quartile managers falling below their peer medians over the market cycle. Our portfolio replication techniques allow investors to identify key factor exposures and to disaggregate the effects of factors from skill.</p>
+      <p>Because the performance of factors is subject to market cycles, manager peer group rankings are also subject to such cycles. This cyclicality, combined with investors' conflation of the performance impact of a manager's factor exposures (i.e., investment style) with their selection alpha, often leads to disappointing results: manager rankings that are not persistent, and high-ranking first-quartile managers falling below their peer medians over the market cycle. Our portfolio replication techniques allow investors to identify key factor exposures and to disaggregate the effects of factors from skill.</p>
 
       <p>In order to identify factors significant to each manager product, we implemented a regularized regression technique that performs both factor selection and beta regularization to enhance our portfolio replication model's prediction accuracy and interpretability. We further applied a constrained optimization technique requiring all factor exposures to sum to 100% and each exposure to fall within a range of 0%–100%. This renders each manager clone as a transparent, investable, long-only factor replication portfolio. The methodology now covers both equity and fixed income managers, with fixed income clones constructed from duration, spread, and credit-factor indices.</p>
 
@@ -596,7 +596,7 @@
       <p>A product was not evaluated unless it had the requisite 36 months of history needed to build the clone portfolios and calculate the performance metrics. The final skill metrics we evaluated allow us to test a 3-year forward-looking return. To minimize survivorship bias, we included dead products in our analysis until their final month in the database and replaced any missing time periods with returns from the Static Clone of the product.</p>
       <p>We categorized the testing universe into peer groups based on investment style, market cap focus, and region (for equity), and by duration and spread category (for fixed income). The total number of products used in the test is shown below in Table 1.</p>
 
-      <p><strong>Table 1 — Testing Universe</strong></p>
+      <p><strong>Table 1: Testing Universe</strong></p>
       <div class="table-wrap">
         <table>
           <thead>
@@ -629,7 +629,7 @@
 
       <span id="procedure" class="section-anchor"></span>
       <h3>Testing Procedure</h3>
-      <p><strong>Time Horizon:</strong> Equity — July 31, 2001 to January 31, 2026 (forward-looking 3-year windows). Fixed Income — December 31, 2011 to January 31, 2023.</p>
+      <p><strong>Time Horizon:</strong> Equity: July 31, 2001 to January 31, 2026 (forward-looking 3-year windows). Fixed Income: December 31, 2011 to January 31, 2023.</p>
       <p><strong>Objective:</strong> To identify a group of managers that maximizes the forward-looking Manager Skill relative to their peer average, using independent skill variables as screening criteria.</p>
       <p><strong>Independent Variables:</strong> We evaluated all quarter-end observations for Total Consistency, Total Edge, Stock/Security Selection Consistency, Stock/Security Selection Edge, Style Edge, and Style Consistency. The composite Aapryl Score (1 = most skilled, 5 = least skilled) aggregates these six metrics.</p>
       <p><strong>Metrics:</strong> The optimization set a single fixed threshold for each variable. A product was identified as 'Skilled' (Aapryl Score = 1) if the scores for ALL variables were above the thresholds set.</p>
@@ -722,10 +722,10 @@
     <!-- ─── Visual Summary — Equity ───────────────────────────────── -->
     <section class="section">
       <span id="equity-charts" class="section-anchor"></span>
-      <h2>Visual Summary — Equity</h2>
+      <h2>Visual Summary: Equity</h2>
 
       <div class="chart-section">
-        <h4>% Increase in Top Quintile Likelihood (Equity — Aapryl Score=1 vs Peer Avg)</h4>
+        <h4>% Increase in Top Quintile Likelihood (Equity: Aapryl Score=1 vs Peer Avg)</h4>
         <div class="chart-subtitle">Percentage-point change in probability of finishing in the top quintile of forward performance</div>
         <div class="chart-wrap">
           <canvas id="equityChart1"></canvas>
@@ -734,7 +734,7 @@
       </div>
 
       <div class="chart-section">
-        <h4>Excess Alpha vs Peer Avg — Clone-Based (Equity, Annualized 36m Forward)</h4>
+        <h4>Excess Alpha vs Peer Avg: Clone-Based (Equity, Annualized 36m Forward)</h4>
         <div class="chart-subtitle">Forward 36-month annualized excess return vs. peer-weighted average, clone-relative</div>
         <div class="chart-wrap">
           <canvas id="equityChart2"></canvas>
@@ -746,10 +746,10 @@
     <!-- ─── Visual Summary — Fixed Income ────────────────────────── -->
     <section class="section">
       <span id="fi-charts" class="section-anchor"></span>
-      <h2>Visual Summary — Fixed Income</h2>
+      <h2>Visual Summary: Fixed Income</h2>
 
       <div class="chart-section">
-        <h4>% Increase in Top Quintile Likelihood (Fixed Income — Aapryl Score=1 vs Peer Avg)</h4>
+        <h4>% Increase in Top Quintile Likelihood (Fixed Income: Aapryl Score=1 vs Peer Avg)</h4>
         <div class="chart-subtitle">Percentage-point change in top quintile finish probability across nine fixed income peer groups</div>
         <div class="chart-wrap">
           <canvas id="fiChart1"></canvas>
@@ -758,7 +758,7 @@
       </div>
 
       <div class="chart-section">
-        <h4>Excess Alpha vs Peer Avg — Clone-Based (Fixed Income, Annualized 36m Forward)</h4>
+        <h4>Excess Alpha vs Peer Avg: Clone-Based (Fixed Income, Annualized 36m Forward)</h4>
         <div class="chart-subtitle">All 13 fixed income sub-categories showed positive excess alpha</div>
         <div class="chart-wrap">
           <canvas id="fiChart2"></canvas>
@@ -773,7 +773,7 @@
       <h2>Conclusions and Next Steps</h2>
 
       <p>It is our belief that if there is true signal in a metric, it should not take a complex model to illustrate the value. Therefore, this test was designed to be simple and straightforward.</p>
-      <p>The primary goal of this updated analysis was to show that using the portfolio replication and skill metrics developed by Xponance and Aapryl, one could identify products that are likely to outperform their style—now across both equity <em>and</em> fixed income peer groups. The results support this thesis across a majority of the peer groups tested:</p>
+      <p>The primary goal of this updated analysis was to show that using the portfolio replication and skill metrics developed by Xponance and Aapryl, one could identify products that are likely to outperform their style, now across both equity <em>and</em> fixed income peer groups. The results support this thesis across a majority of the peer groups tested:</p>
 
       <div class="conclusion-grid">
         <div class="conclusion-card">
@@ -796,23 +796,23 @@
       <ul class="research-list">
         <li>
           <div class="icon">1</div>
-          <div><strong>Opportunity Score</strong> — A proprietary measure expanding on the concept of Active Share</div>
+          <div><strong>Opportunity Score:</strong> A proprietary measure expanding on the concept of Active Share</div>
         </li>
         <li>
           <div class="icon">2</div>
-          <div><strong>Expenses, Liquidity &amp; Turnover</strong> — Incorporating these factors for both equity and fixed income strategies</div>
+          <div><strong>Expenses, Liquidity &amp; Turnover:</strong> Incorporating these factors for both equity and fixed income strategies</div>
         </li>
         <li>
           <div class="icon">3</div>
-          <div><strong>Machine Learning</strong> — To identify predictors of negative skill and refine positive skill predictors</div>
+          <div><strong>Machine Learning:</strong> To identify predictors of negative skill and refine positive skill predictors</div>
         </li>
         <li>
           <div class="icon">4</div>
-          <div><strong>Expanded Fixed Income Coverage</strong> — Including Short Duration, TIPS, and Municipal Bond categories</div>
+          <div><strong>Expanded Fixed Income Coverage:</strong> Including Short Duration, TIPS, and Municipal Bond categories</div>
         </li>
         <li>
           <div class="icon">5</div>
-          <div><strong>Cross-Asset Analysis</strong> — Skill persistence analysis and multi-manager portfolio construction applications</div>
+          <div><strong>Cross-Asset Analysis:</strong> Skill persistence analysis and multi-manager portfolio construction applications</div>
         </li>
       </ul>
 
