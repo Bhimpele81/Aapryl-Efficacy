@@ -14,10 +14,10 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --blue:        #1B6DB5;
-      --blue-dark:   #14518A;
-      --blue-light:  #D6E8F7;
-      --blue-mid:    #4A90C4;
+      --blue:        #1A79BF;
+      --blue-dark:   #135E96;
+      --blue-light:  #D4E9F7;
+      --blue-mid:    #4A9FD0;
       --red:         #C0392B;
       --gray-100:    #F7F9FB;
       --gray-200:    #EEF2F6;
@@ -846,9 +846,9 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ── Chart helpers ────────────────────────────────────────────────── */
-const BLUE = '#1B6DB5';
+const BLUE = '#1A79BF';
 const RED  = '#C0392B';
-const BLUE_LIGHT = '#62B6E8';
+const BLUE_LIGHT = '#4A9FD0';
 
 function barColors(data) {
   return data.map(v => v >= 0 ? BLUE : RED);
@@ -1029,7 +1029,7 @@ new Chart(document.getElementById('fiChart2'), {
     datasets: [{
       data: fi2Data,
       backgroundColor: BLUE,
-      borderColor: '#14518A',
+      borderColor: '#135E96',
       borderWidth: 1,
       borderRadius: 2
     }]
