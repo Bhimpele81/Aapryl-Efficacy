@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Efficacy Testing of Aapryl Manager Skill Forecast Methodology</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:        #1B6DB5;
+      --blue-dark:   #14518A;
+      --blue-light:  #D6E8F7;
+      --blue-mid:    #4A90C4;
+      --red:         #C0392B;
+      --gray-100:    #F7F9FB;
+      --gray-200:    #EEF2F6;
+      --gray-300:    #D0D9E3;
+      --gray-700:    #3D4E5F;
+      --gray-900:    #1A2430;
+      --text:        #2C3E50;
+      --sidebar-w:   260px;
+      --content-max: 960px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      background: #fff;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ─── Sidebar Nav ───────────────────────────────────────────────── */
+    #sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--blue-dark);
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #sidebar .logo {
+      padding: 28px 22px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    #sidebar .logo span {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    #sidebar .logo small {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    #sidebar nav { padding: 16px 0 32px; }
+
+    #sidebar nav a {
+      display: block;
+      padding: 9px 22px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.80);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all 0.18s;
+    }
+    #sidebar nav a:hover,
+    #sidebar nav a.active {
+      color: #fff;
+      background: rgba(255,255,255,0.08);
+      border-left-color: #62B6E8;
+    }
+    #sidebar nav .nav-section {
+      padding: 18px 22px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.40);
+    }
+
+    /* ─── Main Content ──────────────────────────────────────────────── */
+    #main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 60%, var(--blue-mid) 100%);
+      color: #fff;
+      padding: 70px 60px 60px;
+    }
+    .hero .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.25;
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+    .hero .meta {
+      font-size: 13px;
+      color: rgba(255,255,255,0.70);
+    }
+    .hero .meta span { margin-right: 24px; }
+
+    /* ─── Page Body ─────────────────────────────────────────────────── */
+    .page-body {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 56px 60px 80px;
+    }
+
+    /* ─── Section ───────────────────────────────────────────────────── */
+    .section { margin-bottom: 64px; }
+    .section-anchor { display: block; height: 0; margin-top: -80px; padding-top: 80px; }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gray-900);
+      border-bottom: 2px solid var(--blue);
+      padding-bottom: 10px;
+      margin-bottom: 22px;
+    }
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--blue);
+      margin: 28px 0 10px;
+    }
+    h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: underline;
+      margin: 22px 0 8px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    /* ─── Callout / Abstract ─────────────────────────────────────────── */
+    .callout {
+      background: var(--blue-light);
+      border-left: 4px solid var(--blue);
+      padding: 22px 26px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 14px;
+    }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ─── Definition List ────────────────────────────────────────────── */
+    .def-list { list-style: none; margin: 0; padding: 0; }
+    .def-list li {
+      padding: 10px 0 10px 20px;
+      border-bottom: 1px solid var(--gray-200);
+      position: relative;
+    }
+    .def-list li::before {
+      content: "•";
+      color: var(--blue);
+      font-size: 18px;
+      position: absolute;
+      left: 0;
+      top: 9px;
+    }
+    .def-list li:last-child { border-bottom: none; }
+    .def-list strong { font-style: italic; color: var(--gray-900); }
+
+    /* ─── Bullet Lists ───────────────────────────────────────────────── */
+    ul.content-list {
+      padding-left: 24px;
+      margin-bottom: 14px;
+    }
+    ul.content-list li { margin-bottom: 8px; }
+
+    /* ─── Metric Cards ───────────────────────────────────────────────── */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin: 22px 0;
+    }
+    .metric-card {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      border-top: 3px solid var(--blue);
+      border-radius: 6px;
+      padding: 18px 20px;
+    }
+    .metric-card h5 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+    .metric-card p { font-size: 13.5px; margin: 0; }
+
+    /* ─── Tables ─────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 22px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    thead th {
+      background: var(--blue);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    thead th:not(:first-child) { text-align: center; }
+    tbody tr:nth-child(even) { background: var(--gray-100); }
+    tbody tr:hover { background: var(--blue-light); }
+    tbody td { padding: 8px 14px; border-bottom: 1px solid var(--gray-200); }
+    tbody td:not(:first-child) { text-align: center; }
+    .row-group-header td {
+      background: #3A7EC4;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 7px 14px;
+    }
+    .row-group-header:hover td { background: #3A7EC4 !important; }
+    .val-pos { color: #1A7A3A; font-weight: 600; }
+    .val-neg { color: var(--red); font-weight: 600; }
+    td.indent { padding-left: 28px; }
+
+    /* ─── Chart Containers ───────────────────────────────────────────── */
+    .chart-section {
+      margin: 40px 0;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      padding: 28px 24px 24px;
+    }
+    .chart-section h4 {
+      font-size: 14px;
+      font-style: normal;
+      text-decoration: none;
+      color: var(--blue);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .chart-section .chart-subtitle {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .chart-wrap { position: relative; height: 380px; }
+    .chart-caption {
+      font-size: 12px;
+      font-style: italic;
+      color: #666;
+      text-align: center;
+      margin-top: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ─── Stat Highlights ─────────────────────────────────────────────── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .stat-box {
+      text-align: center;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 8px;
+      padding: 24px 16px;
+    }
+    .stat-box .stat-val {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-box .stat-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.4;
+    }
+
+    /* ─── Conclusion Highlights ──────────────────────────────────────── */
+    .conclusion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 22px 0;
+    }
+    .conclusion-card {
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      padding: 22px 22px;
+    }
+    .conclusion-card h5 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .conclusion-card h5 .badge {
+      background: var(--blue);
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+
+    /* ─── Future Research ─────────────────────────────────────────────── */
+    .research-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+    .research-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .research-list li:last-child { border-bottom: none; }
+    .research-list .icon {
+      width: 28px;
+      height: 28px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--blue);
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    /* ─── Footnote / Disclaimer ──────────────────────────────────────── */
+    .footnote {
+      font-size: 12px;
+      color: #888;
+      border-top: 1px solid var(--gray-300);
+      margin-top: 20px;
+      padding-top: 14px;
+    }
+    .disclaimer {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      padding: 18px 22px;
+      font-size: 12px;
+      color: #777;
+      margin-top: 40px;
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 0px; }
+      #sidebar { transform: translateX(-260px); width: 260px; }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .hero { padding: 40px 24px 36px; }
+      .hero h1 { font-size: 24px; }
+      .page-body { padding: 36px 24px 60px; }
+      .metric-grid, .stat-row, .conclusion-grid { grid-template-columns: 1fr; }
+      .menu-btn { display: flex !important; }
+    }
+
+    .menu-btn {
+      display: none;
+      position: fixed;
+      top: 16px; left: 16px;
+      z-index: 200;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      width: 40px; height: 40px;
+      font-size: 20px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile menu button -->
+<button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">&#9776;</button>
+
+<!-- ─── Sidebar ─────────────────────────────────────────────────────── -->
+<aside id="sidebar">
+  <div class="logo">
+    <span>Aapryl</span>
+    <small>Efficacy Report · 2025</small>
+  </div>
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a href="#abstract">Abstract</a>
+    <a href="#definitions">Key Definitions</a>
+
+    <div class="nav-section">Methodology</div>
+    <a href="#clones">Portfolio Replication</a>
+    <a href="#skill-metrics">Skill Metrics</a>
+
+    <div class="nav-section">Testing</div>
+    <a href="#universe">Product Universe</a>
+    <a href="#procedure">Testing Procedure</a>
+
+    <div class="nav-section">Results</div>
+    <a href="#equity-results">Equity Results</a>
+    <a href="#fi-results">Fixed Income Results</a>
+    <a href="#equity-charts">Equity Charts</a>
+    <a href="#fi-charts">Fixed Income Charts</a>
+
+    <div class="nav-section">Conclusions</div>
+    <a href="#conclusions">Conclusions &amp; Next Steps</a>
+  </nav>
+</aside>
+
+<!-- ─── Main ───────────────────────────────────────────────────────── -->
+<main id="main">
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="eyebrow">Xponance &amp; Aapryl &nbsp;·&nbsp; Research Paper &nbsp;·&nbsp; Data through January 31, 2026</div>
+    <h1>Efficacy Testing of Aapryl Manager Skill Forecast Methodology</h1>
+    <div class="meta">
+      <span>&#128197; January 31, 2026</span>
+      <span>&#128196; 11 pages</span>
+      <span>&#127758; Equity &amp; Fixed Income</span>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- ─── Abstract ──────────────────────────────────────────────── -->
+    <section class="section">
+      <span id="abstract" class="section-anchor"></span>
+      <h2>Abstract</h2>
+      <div class="callout">
+        <p>Identifying active managers that have a high probability of outperforming their peers and relevant market benchmarks has traditionally been challenging for asset owners.</p>
+        <p>The objective of this paper is to show that using a combination of the portfolio replication techniques and skill metrics developed by Xponance and Aapryl, one could identify products that are more likely to outperform their style. We tested the efficacy of 6 skill-based metrics to predict forward-looking skill of investment managers across <strong>multiple equity investment style peer groups</strong> as well as, for the first time, <strong>fixed income peer groups</strong>. This update extends our prior equity-only analysis to include nine fixed income categories, spanning core, core plus, high yield, global bonds, EM bonds, bank loans, MBS, US corporate, and short-term investment grade strategies. Data is current through January 31, 2026.</p>
+      </div>
+
+      <!-- Stat row -->
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-val">27</div>
+          <div class="stat-label">Equity peer groups<br>tested</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">13</div>
+          <div class="stat-label">Fixed income<br>sub-categories tested</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">6</div>
+          <div class="stat-label">Skill-based metrics<br>in Aapryl Score</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Key Definitions ───────────────────────────────────────── -->
+    <section class="section">
+      <span id="definitions" class="section-anchor"></span>
+      <h2>Key Definitions</h2>
+      <ul class="def-list">
+        <li><strong>Manager Product:</strong> An investment portfolio or strategy managed by a portfolio manager, team, process and investment infrastructure.</li>
+        <li><strong>Static Clone:</strong> Long-term passive replication portfolio consisting of 100% allocation to various market indices including indices focused on: style, region, fundamental or risk factors, market cap, and economic sensitivity. Weights are set by Xponance's proprietary algorithm using the historical returns of product and indices.</li>
+        <li><strong>Dynamic Clone:</strong> Short-term passive replication portfolio consisting of 100% allocation to various market indices. Weights are set by Xponance's proprietary algorithm using the trailing 36 months of product and index returns.</li>
+        <li><strong>Manager Skill:</strong> Product performance minus Static Clone Performance, normalized for market environment and peer group.</li>
+        <li><strong>Aapryl Score:</strong> A composite score (1–5, where 1 = most skilled) derived from six skill-based metrics spanning Total Excess Return, Stock Selection Return, and Style Timing Return—each measured for both Consistency and Edge.</li>
+      </ul>
+    </section>
+
+    <!-- ─── Methodology Overview ──────────────────────────────────── -->
+    <section class="section">
+      <span id="clones" class="section-anchor"></span>
+      <h2>Methodology Overview</h2>
+
+      <h3>Development of More Accurate Manager Benchmarks (Clones) Through Portfolio Replication</h3>
+      <p>Manager performance varies over time, driven by factors that managers directly control, as well as factors outside of their control. Many manager processes begin with a belief system or investment philosophy that dictates which factors from a broad universe of securities are filtered for consideration. The aggregation of these factors can broadly be described as representative of the manager's investment style. From there, managers typically perform additional fundamental or technical analysis in order to determine the final sub-set of securities that will comprise their portfolio. However, this initial filtering of factors leads to either explicit or implicit factor exposures that can have a meaningful impact on manager performance that is separate from their selection skill.</p>
+
+      <p>Because the performance of factors is subject to market cycles, manager peer group rankings are also subject to such cycles. This cyclicality—combined with investors' conflation of the performance impact of a manager's factor exposures (i.e., investment style) with their selection alpha—often leads to disappointing results: manager rankings that are not persistent, and high-ranking first-quartile managers falling below their peer medians over the market cycle. Our portfolio replication techniques allow investors to identify key factor exposures and to disaggregate the effects of factors from skill.</p>
+
+      <p>In order to identify factors significant to each manager product, we implemented a regularized regression technique that performs both factor selection and beta regularization to enhance our portfolio replication model's prediction accuracy and interpretability. We further applied a constrained optimization technique requiring all factor exposures to sum to 100% and each exposure to fall within a range of 0%–100%. This renders each manager clone as a transparent, investable, long-only factor replication portfolio. The methodology now covers both equity and fixed income managers, with fixed income clones constructed from duration, spread, and credit-factor indices.</p>
+
+      <!-- Metric Cards for Clone Types -->
+      <div class="metric-grid">
+        <div class="metric-card">
+          <h5>Static Clone</h5>
+          <p>Long-term passive replication. Captures persistent factor exposures via historical full-period returns. Weights are constrained 0%–100%, summing to 100%.</p>
+        </div>
+        <div class="metric-card">
+          <h5>Dynamic Clone</h5>
+          <p>Short-term passive replication using trailing 36-month returns. Reflects recent shifts in style or factor exposure in real time.</p>
+        </div>
+        <div class="metric-card">
+          <h5>Manager Skill</h5>
+          <p>Product performance minus Static Clone Performance. Isolates true selection alpha from factor-driven returns, normalized by peer group.</p>
+        </div>
+      </div>
+
+      <span id="skill-metrics" class="section-anchor"></span>
+      <h3>Development and Analysis of Key Skill Metrics</h3>
+      <p>The skill metrics are derived by dissecting the non-style portion of the return using 3 types of excess return, each with 2 skill measurements.</p>
+
+      <h4>Excess Returns</h4>
+      <ul class="content-list">
+        <li><em><strong>Total Excess Return:</strong></em> Manager Skill = Product performance minus Static Clone Performance</li>
+        <li><em><strong>Stock / Security Selection Return:</strong></em> Product performance minus Dynamic Clone Performance</li>
+        <li><em><strong>Style Timing Return:</strong></em> Dynamic Clone Performance minus Static Clone Performance</li>
+      </ul>
+
+      <h4>Skill Measurements (Calculated for each of the 3 excess return series)</h4>
+      <ul class="content-list">
+        <li><u><strong>Consistency:</strong></u> Measure of the frequency of positive excess return. The measure begins with a standard batting average calculation and then adjusts for the length of the track record, market conditions and peer group performance. The result is a Z-score representing the manager's relative position among similar investment products, with 0 being average.</li>
+        <li><u><strong>Edge:</strong></u> Measure of the relative magnitude of positive vs. negative excess returns. The measure begins with an Omega ratio<sup>1</sup> (0% threshold) calculation, then adjusts for the length of the track record, market conditions and peer group performance. The result is a Z-score representing the manager's relative position among similar investment products, with 0 being average.</li>
+      </ul>
+
+      <p class="footnote"><sup>1</sup> Omega Ratio can be summarized as the probability-weighted ratio of gains versus losses for a threshold return target. It is unique in that it does not assume returns will follow a set distribution, and large outliers have a much stronger impact than many other return statistics.</p>
+
+      <!-- 6-metric visual -->
+      <div style="margin: 28px 0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Return Type</th>
+              <th>Consistency Metric</th>
+              <th>Edge Metric</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Total Excess Return</td><td>Total Consistency</td><td>Total Edge</td></tr>
+            <tr><td>Stock / Security Selection Return</td><td>Selection Consistency</td><td>Selection Edge</td></tr>
+            <tr><td>Style Timing Return</td><td>Style Consistency</td><td>Style Edge</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:#777;margin-top:8px;font-style:italic;">These six metrics compose the Aapryl Score (1 = most skilled, 5 = least skilled).</p>
+      </div>
+    </section>
+
+    <!-- ─── Methodology Testing ────────────────────────────────────── -->
+    <section class="section">
+      <span id="universe" class="section-anchor"></span>
+      <h2>Methodology Testing</h2>
+
+      <h3>Product Universe</h3>
+      <p>We examined long-only equity strategies in the Evestment Expanded Monthly Database that had at least 36 months of consecutive returns between July 31, 2001 and January 31, 2026, and reported gross returns in US dollars. For fixed income, we examined strategies from December 31, 2011 through January 31, 2023 across nine fixed income peer groups.</p>
+      <p>A product was not evaluated unless it had the requisite 36 months of history needed to build the clone portfolios and calculate the performance metrics. The final skill metrics we evaluated allow us to test a 3-year forward-looking return. To minimize survivorship bias, we included dead products in our analysis until their final month in the database and replaced any missing time periods with returns from the Static Clone of the product.</p>
+      <p>We categorized the testing universe into peer groups based on investment style, market cap focus, and region (for equity), and by duration and spread category (for fixed income). The total number of products used in the test is shown below in Table 1.</p>
+
+      <p><strong>Table 1 — Testing Universe</strong></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:70%">Peer Group / Category</th>
+              <th>Number of Products</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-group-header"><td colspan="2">EQUITY</td></tr>
+            <tr><td class="indent">Global ex-US: Relative Value</td><td>311</td></tr>
+            <tr><td class="indent">US: Aggressive Growth</td><td>185</td></tr>
+            <tr><td class="indent">US: Core Growth</td><td>765</td></tr>
+            <tr><td class="indent">US: GARP</td><td>1,307</td></tr>
+            <tr><td class="indent">US: High Quality Blend</td><td>1,538</td></tr>
+            <tr><td class="indent">US: Relative Value</td><td>1,024</td></tr>
+            <tr class="row-group-header"><td colspan="2">FIXED INCOME</td></tr>
+            <tr><td class="indent">Bank Loans</td><td>89</td></tr>
+            <tr><td class="indent">Core</td><td>569</td></tr>
+            <tr><td class="indent">Core Plus</td><td>207</td></tr>
+            <tr><td class="indent">EM Bonds</td><td>159</td></tr>
+            <tr><td class="indent">Global Bonds</td><td>265</td></tr>
+            <tr><td class="indent">High Yield</td><td>258</td></tr>
+            <tr><td class="indent">MBS</td><td>101</td></tr>
+            <tr><td class="indent">Short Term Investment Grade</td><td>290</td></tr>
+            <tr><td class="indent">US Corporate</td><td>209</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <span id="procedure" class="section-anchor"></span>
+      <h3>Testing Procedure</h3>
+      <p><strong>Time Horizon:</strong> Equity — July 31, 2001 to January 31, 2026 (forward-looking 3-year windows). Fixed Income — December 31, 2011 to January 31, 2023.</p>
+      <p><strong>Objective:</strong> To identify a group of managers that maximizes the forward-looking Manager Skill relative to their peer average, using independent skill variables as screening criteria.</p>
+      <p><strong>Independent Variables:</strong> We evaluated all quarter-end observations for Total Consistency, Total Edge, Stock/Security Selection Consistency, Stock/Security Selection Edge, Style Edge, and Style Consistency. The composite Aapryl Score (1 = most skilled, 5 = least skilled) aggregates these six metrics.</p>
+      <p><strong>Metrics:</strong> The optimization set a single fixed threshold for each variable. A product was identified as 'Skilled' (Aapryl Score = 1) if the scores for ALL variables were above the thresholds set.</p>
+      <p><strong>Method:</strong> We used fixed thresholds from the optimization to test each product by quarter. Two key output metrics were computed: (1) the <strong>percentage-point increase in probability of finishing in the top quintile</strong> for Skilled vs. the peer-weighted average, and (2) the <strong>forward 36-month excess return of Skilled managers vs. the peer-weighted average</strong> (measured relative to each manager's static clone).</p>
+    </section>
+
+    <!-- ─── Summary of Results ─────────────────────────────────────── -->
+    <section class="section">
+      <span id="equity-results" class="section-anchor"></span>
+      <h2>Summary of Results</h2>
+      <p>The table and charts below present results for both equity and fixed income peer groups. A positive % Increase in Top Quintile Likelihood indicates that Aapryl Score = 1 (most skilled) managers had a higher-than-average probability of finishing in the top quintile of forward performance. A positive Excess Alpha indicates Skilled managers outperformed their peer average on a clone-relative basis over the subsequent 3-year period.</p>
+
+      <h3>Equity Results</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Region / Universe</th>
+              <th>Aapryl Score=1 Count</th>
+              <th>% Increase in Top Quintile Likelihood</th>
+              <th>Excess Alpha vs Peer Avg (Clone-Based)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-group-header"><td colspan="4">US Large Cap</td></tr>
+            <tr><td class="indent">Relative Value</td><td>106</td><td class="val-neg">-7.4%</td><td class="val-neg">-0.72%</td></tr>
+            <tr><td class="indent">Core Growth</td><td>74</td><td class="val-neg">-1.7%</td><td class="val-pos">+0.38%</td></tr>
+            <tr><td class="indent">Aggressive Growth</td><td>19</td><td class="val-neg">-8.7%</td><td class="val-neg">-1.01%</td></tr>
+            <tr><td class="indent">High Quality Blend</td><td>108</td><td class="val-neg">-10.7%</td><td class="val-neg">-2.27%</td></tr>
+            <tr><td class="indent">GARP</td><td>82</td><td class="val-pos">+7.3%</td><td class="val-pos">+0.62%</td></tr>
+            <tr class="row-group-header"><td colspan="4">Global ex-US Large Cap</td></tr>
+            <tr><td class="indent">Relative Value</td><td>21</td><td class="val-pos">+3.3%</td><td class="val-pos">+1.00%</td></tr>
+            <tr><td class="indent">Core Growth</td><td>29</td><td class="val-neg">-0.5%</td><td class="val-neg">-0.87%</td></tr>
+            <tr><td class="indent">Aggressive Growth</td><td>12</td><td class="val-pos">+1.3%</td><td class="val-pos">+1.60%</td></tr>
+            <tr><td class="indent">High Quality Blend</td><td>33</td><td class="val-pos">+17.3%</td><td class="val-pos">+0.86%</td></tr>
+            <tr><td class="indent">GARP</td><td>22</td><td class="val-neg">-10.2%</td><td class="val-neg">-2.17%</td></tr>
+            <tr class="row-group-header"><td colspan="4">Emerging Markets Large Cap</td></tr>
+            <tr><td class="indent">Relative Value</td><td>12</td><td class="val-pos">+1.7%</td><td class="val-neg">-0.89%</td></tr>
+            <tr><td class="indent">Core Growth</td><td>17</td><td class="val-pos">+6.3%</td><td class="val-pos">+1.21%</td></tr>
+            <tr><td class="indent">High Quality Blend</td><td>13</td><td class="val-neg">-7.9%</td><td class="val-pos">+1.08%</td></tr>
+            <tr><td class="indent">GARP</td><td>18</td><td class="val-pos">+15.2%</td><td class="val-pos">+2.82%</td></tr>
+            <tr class="row-group-header"><td colspan="4">Global Large Cap</td></tr>
+            <tr><td class="indent">Relative Value</td><td>32</td><td class="val-pos">+21.5%</td><td class="val-pos">+1.03%</td></tr>
+            <tr><td class="indent">Core Growth</td><td>13</td><td class="val-pos">+25.3%</td><td class="val-pos">+1.51%</td></tr>
+            <tr><td class="indent">Aggressive Growth</td><td>13</td><td class="val-pos">+5.8%</td><td class="val-pos">+0.01%</td></tr>
+            <tr><td class="indent">High Quality Blend</td><td>14</td><td class="val-pos">+16.9%</td><td class="val-pos">+0.49%</td></tr>
+            <tr><td class="indent">GARP</td><td>21</td><td class="val-pos">+9.5%</td><td class="val-pos">+1.70%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <span id="fi-results" class="section-anchor"></span>
+      <h3>Fixed Income Results</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Peer Group</th>
+              <th>Term / Spread</th>
+              <th>Aapryl Score=1 Count</th>
+              <th>% Increase in Top Quintile Likelihood</th>
+              <th>Excess Alpha vs Peer Avg (Clone-Based)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-group-header"><td colspan="5">MBS</td></tr>
+            <tr><td class="indent">MBS</td><td>All</td><td>11</td><td class="val-pos">+57.7%</td><td class="val-pos">+1.98%</td></tr>
+            <tr class="row-group-header"><td colspan="5">Bank Loans</td></tr>
+            <tr><td class="indent">Bank Loans</td><td>All</td><td>14</td><td class="val-neg">-7.6%</td><td class="val-pos">+0.15%</td></tr>
+            <tr class="row-group-header"><td colspan="5">US Corporate</td></tr>
+            <tr><td class="indent">US Corporate</td><td>Intermediate Term</td><td>12</td><td class="val-pos">+6.0%</td><td class="val-pos">+0.44%</td></tr>
+            <tr><td class="indent">US Corporate</td><td>Long Term</td><td>4</td><td class="val-pos">+1.0%</td><td class="val-pos">+0.77%</td></tr>
+            <tr class="row-group-header"><td colspan="5">High Yield</td></tr>
+            <tr><td class="indent">High Yield</td><td>Intermediate Term</td><td>25</td><td class="val-pos">+16.0%</td><td class="val-pos">+0.30%</td></tr>
+            <tr><td class="indent">High Yield</td><td>Long Term</td><td>2</td><td class="val-neg">-17.2%</td><td class="val-pos">+0.42%</td></tr>
+            <tr><td class="indent">High Yield</td><td>Short Term</td><td>13</td><td class="val-neg">-15.4%</td><td class="val-pos">+0.46%</td></tr>
+            <tr class="row-group-header"><td colspan="5">EM Bonds</td></tr>
+            <tr><td class="indent">EM Bonds</td><td>Intermediate Term</td><td>21</td><td class="val-pos">+14.2%</td><td class="val-pos">+1.13%</td></tr>
+            <tr><td class="indent">EM Bonds</td><td>Long Term</td><td>1</td><td class="val-pos">+82.1%</td><td class="val-pos">+1.13%</td></tr>
+            <tr class="row-group-header"><td colspan="5">Global Bonds</td></tr>
+            <tr><td class="indent">Global Bonds</td><td>Intermediate Term / High Risk</td><td>9</td><td class="val-pos">+12.6%</td><td class="val-pos">+0.43%</td></tr>
+            <tr><td class="indent">Global Bonds</td><td>Intermediate Term / Low Risk</td><td>5</td><td class="val-neg">-5.0%</td><td class="val-pos">+0.62%</td></tr>
+            <tr><td class="indent">Global Bonds</td><td>Long Term</td><td>23</td><td class="val-pos">+8.5%</td><td class="val-pos">+0.66%</td></tr>
+            <tr><td class="indent">Global Bonds</td><td>Short Term</td><td>9</td><td class="val-pos">+2.2%</td><td class="val-pos">+0.58%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ─── Visual Summary — Equity ───────────────────────────────── -->
+    <section class="section">
+      <span id="equity-charts" class="section-anchor"></span>
+      <h2>Visual Summary — Equity</h2>
+
+      <div class="chart-section">
+        <h4>% Increase in Top Quintile Likelihood (Equity — Aapryl Score=1 vs Peer Avg)</h4>
+        <div class="chart-subtitle">Percentage-point change in probability of finishing in the top quintile of forward performance</div>
+        <div class="chart-wrap">
+          <canvas id="equityChart1"></canvas>
+        </div>
+        <p class="chart-caption">Figure 1. Percentage-point change in probability of finishing in the top quintile of forward performance for Aapryl Score=1 (most skilled) managers versus the peer-weighted average. Positive values indicate Aapryl Score=1 managers are more likely to outperform.</p>
+      </div>
+
+      <div class="chart-section">
+        <h4>Excess Alpha vs Peer Avg — Clone-Based (Equity, Annualized 36m Forward)</h4>
+        <div class="chart-subtitle">Forward 36-month annualized excess return vs. peer-weighted average, clone-relative</div>
+        <div class="chart-wrap">
+          <canvas id="equityChart2"></canvas>
+        </div>
+        <p class="chart-caption">Figure 2. Forward 36-month annualized excess return of Aapryl Score=1 managers versus the peer-weighted average, measured relative to each manager's static clone (clone-based alpha). Positive values indicate Aapryl Score=1 managers outperformed their peers on a skill-adjusted basis.</p>
+      </div>
+    </section>
+
+    <!-- ─── Visual Summary — Fixed Income ────────────────────────── -->
+    <section class="section">
+      <span id="fi-charts" class="section-anchor"></span>
+      <h2>Visual Summary — Fixed Income</h2>
+
+      <div class="chart-section">
+        <h4>% Increase in Top Quintile Likelihood (Fixed Income — Aapryl Score=1 vs Peer Avg)</h4>
+        <div class="chart-subtitle">Percentage-point change in top quintile finish probability across nine fixed income peer groups</div>
+        <div class="chart-wrap">
+          <canvas id="fiChart1"></canvas>
+        </div>
+        <p class="chart-caption">Figure 3. Fixed income equivalent of Figure 1. Percentage-point change in top quintile finish probability for Aapryl Score=1 managers versus the peer-weighted average across nine fixed income peer groups.</p>
+      </div>
+
+      <div class="chart-section">
+        <h4>Excess Alpha vs Peer Avg — Clone-Based (Fixed Income, Annualized 36m Forward)</h4>
+        <div class="chart-subtitle">All 13 fixed income sub-categories showed positive excess alpha</div>
+        <div class="chart-wrap">
+          <canvas id="fiChart2"></canvas>
+        </div>
+        <p class="chart-caption">Figure 4. Forward 36-month annualized clone-relative excess return for Aapryl Score=1 fixed income managers versus the peer-weighted average. Positive values indicate Aapryl Score=1 managers outperformed the peer average on a skill-adjusted basis.</p>
+      </div>
+    </section>
+
+    <!-- ─── Conclusions ────────────────────────────────────────────── -->
+    <section class="section">
+      <span id="conclusions" class="section-anchor"></span>
+      <h2>Conclusions and Next Steps</h2>
+
+      <p>It is our belief that if there is true signal in a metric, it should not take a complex model to illustrate the value. Therefore, this test was designed to be simple and straightforward.</p>
+      <p>The primary goal of this updated analysis was to show that using the portfolio replication and skill metrics developed by Xponance and Aapryl, one could identify products that are likely to outperform their style—now across both equity <em>and</em> fixed income peer groups. The results support this thesis across a majority of the peer groups tested:</p>
+
+      <div class="conclusion-grid">
+        <div class="conclusion-card">
+          <h5><span class="badge">Equity</span> 16 of 27 Peer Groups</h5>
+          <p>16 of 27 equity peer groups showed positive excess alpha for Aapryl Score=1 managers. Global and International equity categories showed the most consistent outperformance, while certain US Large Cap and Mid Cap categories showed more muted results.</p>
+        </div>
+        <div class="conclusion-card">
+          <h5><span class="badge">Fixed Income</span> 13 of 13 Sub-Categories</h5>
+          <p>13 of 13 fixed income sub-categories showed positive excess alpha for Aapryl Score=1 managers. MBS, EM Bonds, and Global Bonds demonstrated particularly strong signals. High Yield and Bank Loans showed more modest but still positive results on an alpha basis.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:16px;">
+        <p><strong>Top Quintile Likelihood:</strong> Across both asset classes, Aapryl Score=1 managers showed improved probability of finishing in the top quintile of forward performance in the majority of categories, validating the predictive power of the skill metrics.</p>
+      </div>
+
+      <h3>Current Research Directions</h3>
+      <p>While our results are strong, we continue to advance our research methodology to improve our model. We are currently developing and testing additional metrics and methodologies, including:</p>
+
+      <ul class="research-list">
+        <li>
+          <div class="icon">1</div>
+          <div><strong>Opportunity Score</strong> — A proprietary measure expanding on the concept of Active Share</div>
+        </li>
+        <li>
+          <div class="icon">2</div>
+          <div><strong>Expenses, Liquidity &amp; Turnover</strong> — Incorporating these factors for both equity and fixed income strategies</div>
+        </li>
+        <li>
+          <div class="icon">3</div>
+          <div><strong>Machine Learning</strong> — To identify predictors of negative skill and refine positive skill predictors</div>
+        </li>
+        <li>
+          <div class="icon">4</div>
+          <div><strong>Expanded Fixed Income Coverage</strong> — Including Short Duration, TIPS, and Municipal Bond categories</div>
+        </li>
+        <li>
+          <div class="icon">5</div>
+          <div><strong>Cross-Asset Analysis</strong> — Skill persistence analysis and multi-manager portfolio construction applications</div>
+        </li>
+      </ul>
+
+      <p>As we gain confidence in these enhancements and incorporate them into Aapryl, we will provide updated efficacy tests so that you can share our confidence.</p>
+
+      <div class="disclaimer">
+        <p>Data as of January 31, 2026. Past performance is not indicative of future results. This report is for informational purposes only and does not constitute investment advice. All performance figures are gross of fees unless otherwise noted.</p>
+      </div>
+    </section>
+
+  </div><!-- /page-body -->
+</main>
+
+<script>
+/* ── Sidebar active state on scroll ──────────────────────────────── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+const navLinks = document.querySelectorAll('#sidebar nav a');
+const sections = Array.from(document.querySelectorAll('.section-anchor'));
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+}, { passive: true });
+
+/* ── Chart helpers ────────────────────────────────────────────────── */
+const BLUE = '#1B6DB5';
+const RED  = '#C0392B';
+const BLUE_LIGHT = '#62B6E8';
+
+function barColors(data) {
+  return data.map(v => v >= 0 ? BLUE : RED);
+}
+
+function barBorder(data) {
+  return data.map(v => v >= 0 ? '#14518A' : '#922B21');
+}
+
+/* ── Equity Chart 1: Top Quintile Likelihood ─────────────────────── */
+const eq1Labels = [
+  'EM Core Gr', 'EM GARP', 'EM HQ Blend', 'EM Rel Val',
+  'Glbl Core Gr', 'Glbl GARP', 'Glbl Agg Gr', 'Glbl HQ Blend', 'Glbl Rel Val',
+  'Glbl ex-US Agg Gr', 'Glbl ex-US Core Gr', 'Glbl ex-US GARP', 'Glbl ex-US HQ Blend', 'Glbl ex-US Rel Val',
+  'US Agg Gr', 'US Core Gr', 'US GARP', 'US HQ Blend', 'US Rel Val'
+];
+const eq1Data = [
+  6.3, 15.2, -7.9, 1.7,
+  25.3, 9.5, 5.8, 16.9, 21.5,
+  1.3, -0.5, -10.2, 17.3, 3.3,
+  -8.7, -1.7, 7.3, -10.7, -7.4
+];
+
+new Chart(document.getElementById('equityChart1'), {
+  type: 'bar',
+  data: {
+    labels: eq1Labels,
+    datasets: [{
+      data: eq1Data,
+      backgroundColor: barColors(eq1Data),
+      borderColor: barBorder(eq1Data),
+      borderWidth: 1,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(1)}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { font: { size: 10 }, maxRotation: 60 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Percentage Points', font: { size: 12 } },
+        grid: { color: '#e8edf2' },
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+/* ── Equity Chart 2: Excess Alpha ────────────────────────────────── */
+const eq2Labels = [
+  'EM Core Gr', 'EM GARP', 'EM HQ Blend', 'EM Rel Val',
+  'Glbl Core Gr', 'Glbl GARP', 'Glbl Agg Gr', 'Glbl HQ Blend', 'Glbl Rel Val',
+  'Glbl ex-US Agg Gr', 'Glbl ex-US Core Gr', 'Glbl ex-US GARP', 'Glbl ex-US HQ Blend', 'Glbl ex-US Rel Val',
+  'US Agg Gr', 'US Core Gr', 'US GARP', 'US HQ Blend', 'US Rel Val'
+];
+const eq2Data = [
+  1.21, 2.82, 1.08, -0.89,
+  1.51, 1.70, 0.01, 0.49, 1.03,
+  1.60, -0.87, -2.17, 0.86, 1.00,
+  -1.01, 0.38, 0.62, -2.27, -0.72
+];
+
+new Chart(document.getElementById('equityChart2'), {
+  type: 'bar',
+  data: {
+    labels: eq2Labels,
+    datasets: [{
+      data: eq2Data,
+      backgroundColor: barColors(eq2Data),
+      borderColor: barBorder(eq2Data),
+      borderWidth: 1,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { font: { size: 10 }, maxRotation: 60 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Alpha (%, annualized)', font: { size: 12 } },
+        grid: { color: '#e8edf2' },
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+/* ── Fixed Income Chart 1: Top Quintile Likelihood ───────────────── */
+const fi1Labels = [
+  'Bank Loans\nAll', 'EM Bonds\nInt', 'EM Bonds\nLng',
+  'Glbl Bonds\nInt Hi Risk', 'Glbl Bonds\nInt Lo Risk', 'Glbl Bonds\nLng', 'Glbl Bonds\nSht',
+  'High Yield\nInt', 'High Yield\nLng', 'High Yield\nSht',
+  'MBS\nAll', 'US Corp\nInt', 'US Corp\nLng'
+];
+const fi1Data = [
+  -7.6, 14.2, 82.1,
+  12.6, -5.0, 8.5, 2.2,
+  16.0, -17.2, -15.4,
+  57.7, 6.0, 1.0
+];
+
+new Chart(document.getElementById('fiChart1'), {
+  type: 'bar',
+  data: {
+    labels: fi1Labels,
+    datasets: [{
+      data: fi1Data,
+      backgroundColor: barColors(fi1Data),
+      borderColor: barBorder(fi1Data),
+      borderWidth: 1,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(1)}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { font: { size: 10 }, maxRotation: 50 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Percentage Points', font: { size: 12 } },
+        grid: { color: '#e8edf2' },
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+/* ── Fixed Income Chart 2: Excess Alpha ─────────────────────────── */
+const fi2Labels = [
+  'Bank Loans\nAll', 'EM Bonds\nInt', 'EM Bonds\nLng',
+  'Glbl Bonds\nInt Hi Risk', 'Glbl Bonds\nInt Lo Risk', 'Glbl Bonds\nLng', 'Glbl Bonds\nSht',
+  'High Yield\nInt', 'High Yield\nLng', 'High Yield\nSht',
+  'MBS\nAll', 'US Corp\nInt', 'US Corp\nLng'
+];
+const fi2Data = [
+  0.15, 1.13, 1.13,
+  0.43, 0.62, 0.66, 0.58,
+  0.30, 0.42, 0.46,
+  1.98, 0.44, 0.77
+];
+
+new Chart(document.getElementById('fiChart2'), {
+  type: 'bar',
+  data: {
+    labels: fi2Labels,
+    datasets: [{
+      data: fi2Data,
+      backgroundColor: BLUE,
+      borderColor: '#14518A',
+      borderWidth: 1,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` +${ctx.parsed.y.toFixed(2)}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { font: { size: 10 }, maxRotation: 50 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Alpha (%, annualized)', font: { size: 12 } },
+        grid: { color: '#e8edf2' },
+        min: 0,
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
