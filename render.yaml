@@ -6,5 +6,8 @@ services:
     buildCommand: ""
     routes:
       - type: rewrite
+        source: /health
+        destination: /health/index.html
+      - type: rewrite
         source: /*
         destination: /index.html
